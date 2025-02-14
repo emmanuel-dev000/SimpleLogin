@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <div id="register">
+        <h1>Register</h1>
+        <p>Username</p>
+        <input type="text" name="username" id="username">
+        <p>Password</p>
+        <input type="password" name="password" id="password">
+        <p>Re-type Password</p>
+        <input type="password" name="retype-password" id="retype-password">
+        <input onchange="showAllPasswords()" type="checkbox" name="show-password" id="show-password">
+        <button onclick="register()">Register</button>
+        <br>
+        <br>
+        <a href="index.html">Login?</a>
+    </div>
+    <script>
+        start();
+        function start() {
+            if (window.localStorage.getItem("isUserCreated") == null) {
+                window.localStorage.setItem("isUserCreated", "false");
+            } else {
+                window.localStorage.setItem("isUserCreated", "true");
+            }
+        }
+
+        function register() {
+            var username = document.getElementById("username");
+            var password = document.getElementById("password");
+            var retypePassword = document.getElementById("retype-password");
+
+            if (username.value && password.value && retypePassword.value) {
+                if (password.value == retypePassword.value) {
+                    const createdUser = {
+                        username: username.value,
+                        password: password.value
+                    };
+                    const jsonString = JSON.stringify(createdUser);
+                    window.localStorage.setItem("createdUser",jsonString);
+                    window.localStorage.setItem("isLoggedIn", "false");
+                    window.localStorage.setItem("isUserCreated", "true");
+                    window.location.href = "index.html";
+                }
+
+                else {
+                    const error = document.createElement("p");
+                    error.style.color = "red";
+                    error.textContent = "Your password and re-type password are not the same. Please try again.";
+                    var login = document.getElementById("register");
+                    login.append(error);
+                    username.value = "";
+                    password.value = "";
+                    retypePassword.value = "";
+                }
+            }
+        }
+
+        function showAllPasswords() {
+            var showPassword = document.getElementById("show-password");
+            var password = document.getElementById("password");
+            var retypePassword = document.getElementById("retype-password");
+
+            password.type = showPassword.checked ? "text" : "password";
+            retypePassword.type = showPassword.checked ? "text" : "password";
+        }
+    </script>
+</body>
+</html>

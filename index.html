@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <div id="login">
+        <h1>Login</h1>
+        <p>Username</p>
+        <input type="text" name="username" id="username">
+        <p>Password</p>
+        <input type="password" name="password" id="password">
+        <input onchange="showPassword()" type="checkbox" name="show-password" id="show-password">
+        <button onclick="login()">Login</button>
+    </div>
+    <br>
+    <a href="register.html">Create an account</a>
+    <br>
+    <br>
+    <fieldset>
+        <legend>Debug Account</legend>
+        <p>Username: <strong>user</strong></p>
+        <p>Password: <strong>password</strong></p>
+    </fieldset>
+    <script>
+        start();
+        function start() {
+            // Default username and password for immediate debugging.
+            const defaultUser = { username: "user", password: "password" };
+            window.localStorage.setItem("defaultUser", JSON.stringify(defaultUser));
+
+            // Immediately goes to profile.html if the user is logged in but user goes back to index.html.
+            const isLoggedIn = localStorage.getItem("isLoggedIn");
+            if (isLoggedIn == null) {
+                localStorage.setItem("isLoggedIn", "false");
+            } else {
+                if (isLoggedIn == "true") {
+                    window.location.href = "profile.html";
+                }
+            }
+        }
+
+        function login() {
+            var username = document.getElementById("username");
+            var password = document.getElementById("password");
+
+            if (window.localStorage.getItem("isUserCreated") == "true") {
+                const createdUserInJson = window.localStorage.getItem("createdUser");
+                const createdUser = JSON.parse(createdUserInJson);
+                if (username.value == createdUser.username && password.value ==  createdUser.password) {
+                    window.location.href = "profile.html";
+                    localStorage.setItem("isLoggedIn", "true");
+                }
+            }
+            
+            const defaultUserInJson = window.localStorage.getItem("defaultUser");
+            const defaultUser = JSON.parse(defaultUserInJson);
+            if (username.value == defaultUser.username && password.value ==  defaultUser.password) {
+                    window.location.href = "profile.html";
+                    localStorage.setItem("isLoggedIn", "true");
+            }
+
+            else {
+                const error = document.createElement("p");
+                error.style.color = "red";
+                error.textContent = "Either your username or password is incorrect. Please try again.";
+                var login = document.getElementById("login");
+                login.append(error);
+                username.value = "";
+                password.value = "";
+            }
+        }
+
+        function showPassword() {
+            var checkbox = document.getElementById("show-password");
+            if (checkbox.checked) {
+                password.type = "text";
+            } else {
+                password.type = "password";
+            }
+        }
+    </script>
+</body>
+</html>
